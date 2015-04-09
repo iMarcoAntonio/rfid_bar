@@ -36,7 +36,7 @@
     <div style="display: none;" id="add-event">
         <form role="form" id="event-form">
             <div class="form-group">
-                <label for="event_name">Nombre del Evento:</label>
+                <label for="event_name">* Nombre del Evento:</label>
                 <input type="text" class="form-control" id="event_name" name="event[event_name]" placeholder="Nombre del Evento" value="">
             </div>
             <div class="form-group">
@@ -45,9 +45,10 @@
             </div>
             <div class="form-group">
                 <label for="active">Registrar como Evento Activo?</label>
-				<input type="radio" id="active" name="event[active]" value="1" class="" checked="checked" />Si
-				<input type="radio" id="active" name="event[active]" value="0" class="" />No
+				<input type="radio" id="active_1" name="event_active" value="1" class="" checked="checked" />Si
+				<input type="radio" id="active_2" name="event_active" value="0" class="" />No
             </div>
+            <p style="text-decoration: underline;">* Indica campos obligatorios</p>
         </form>
     </div>
 </div>
@@ -176,14 +177,27 @@
 					;
 				}
                 mod.off('click', '#add-event-btn').on('click', '#add-event-btn', function() {
-                    var data = $('#smwModal #event-form').serialize();
+                    //var data = $('#smwModal #event-form').serialize();
+                    var data = {
+                        event_name: $('#smwModal').find('#event_name').val(),
+                        active: $('#smwModal').find('input[name=event_active]:checked').val(),
+                        description: $('#smwModal').find('#description').val()
+                    };
                     $.ajax({
                         type: "POST",
 						url: '{{ URL::to('/journeyevents') }}' + (typeof id !== 'undefined'?('/' + id):''),
                         data: data,
                         success: function(data, textStatus, jqXHR) {
-                            $('#smwModal').modal('hide');
-                            dt.fnDraw();
+                            if(typeof(data.success) != "undefined"){
+    							alert(data.errors.event_name);
+                        	}
+                        	else{
+                        		$('#smwModal').modal('hide');
+	                        	dt.fnDraw();
+                        	}
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                        	alert("¡ESTO ES VERGONZOSO EN VERDAD! !TRANSACCIÓN ERRÓNEA!");
                         },
                         dataType: 'json'
                     });

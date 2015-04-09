@@ -31,7 +31,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><img src="/img/logo_feng_small.png" style="margin-top:-14px;"/></a>
+                <a class="navbar-brand" href="/"><img src="/img/logo_hqh.jpg" style="margin-top:-14px;"/></a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -67,6 +67,14 @@
                     <!-- <li id="menu_labels_list"><a href="/tags">Etiquetas</a></li>-->
                     <li id="menu_journeyevents_list"><a href="/journeyevents">Eventos</a></li>
                     <li id="menu_bulk_list"><a href="/bulk">Copeo</a></li>
+                    <li id="menu_service_list"><a href="/service">Servicios</a></li>
+                </ul>
+                @endif
+                @if (Auth::user() -> user_type == 4)
+                <h3 class="sub-header">Catálogos</h3>
+                <ul class="nav nav-sidebar">
+                    <li id="menu_bulk_list"><a href="/bulk">Copeo</a></li>
+                    <li id="menu_service_list"><a href="/service">Servicios</a></li>
                 </ul>
                 @endif
                 <h3 class="sub-header">Reportes</h3>

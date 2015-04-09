@@ -10,9 +10,9 @@ class SyncController extends \BaseController {
     public function index() {
         $result = array();
         $result['products'] = Product::select('id', 'upc', 'product_name')->whereType(1)->orderBy("sort_by")->get()->toArray();
-        $result['products_bar'] = Product::select('id', 'upc', 'product_name')->whereType(2)->orderBy("sort_by")->get()->toArray();
+        $result['products_bar'] = Product::select('id', 'upc', 'product_name')->whereType(0)->orderBy("sort_by")->get()->toArray();
         $result['active_event'] = JourneyEvent::active()->toArray();
-        $result['bars'] = Bar::select('id', 'name')->get()->toArray();
+        $result['bars'] = Bar::select('id', 'bar_name')->get()->toArray();
         return Response::json($result);
     }
 

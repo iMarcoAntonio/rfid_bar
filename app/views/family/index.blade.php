@@ -25,18 +25,21 @@
                 </tr>
             </thead>
         </table>
+        {{$errors->first('family_name')}}
     </div>
 
     <div style="display: none;" id="add-family">
         <form role="form" id="family-form">
             <div class="form-group">
-                <label for="family_name">Nombre de la Familia:</label>
+                <label for="family_name">* Nombre de la Familia:</label>
                 <input type="text" class="form-control" id="family_name" name="family[family_name]" placeholder="Nombre de la Familia" value="">
+                {{$errors->first('family_name')}}
             </div>
             <div class="form-group">
                 <label for="description">Descripción:</label>
                 <textarea id="description" name="family[description]" placeholder="Descripción de la familia" class="form-control"></textarea>
             </div>
+            <p style="text-decoration: underline;">* Indica campos obligatorios</p>
         </form>
     </div>
 </div>
@@ -143,14 +146,27 @@
 					;
 				}
                 mod.off('click', '#add-family-btn').on('click', '#add-family-btn', function() {
-                    var data = $('#smwModal #family-form').serialize();
+                    //var data = $('#smwModal #family-form').serialize();
+                    var data = {
+                        family_name: $('#smwModal').find('#family_name').val(),
+                        description: $('#smwModal').find('#description').val()
+                    };
+
                     $.ajax({
                         type: "POST",
 						url: '{{ URL::to('/family') }}' + (typeof id !== 'undefined'?('/' + id):''),
                         data: data,
                         success: function(data, textStatus, jqXHR) {
-                            $('#smwModal').modal('hide');
-                            dt.fnDraw();
+                        	if(typeof(data.success) != "undefined"){
+    							alert(data.errors.family_name);
+                        	}
+                        	else{
+                        		$('#smwModal').modal('hide');
+	                        	dt.fnDraw();
+                        	}
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                        	alert("¡ESTO ES VERGONZOSO EN VERDAD! !TRANSACCIÓN ERRÓNEA!");
                         },
                         dataType: 'json'
                     });

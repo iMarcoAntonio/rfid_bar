@@ -28,13 +28,14 @@
     <div style="display: none;" id="add-bar">
         <form role="form" id="bar-form">
             <div class="form-group">
-                <label for="event_name">Nombre de la Barra:</label>
+                <label for="event_name">* Nombre de la Barra:</label>
                 <input type="text" class="form-control" id="bar_name" name="bar[name]" placeholder="Nombre de la Barra" value="">
             </div>
             <div class="form-group">
                 <label for="description">Descripción:</label>
                 <textarea id="description" name="bar[description]" placeholder="Descripción de la barra" class="form-control"></textarea>
             </div>
+            <p style="text-decoration: underline;">* Indica campos obligatorios</p>
         </form>
     </div>
 	
@@ -127,15 +128,30 @@
 				;
 			}
 			mod.off('click', '#add-bar-btn').on('click', '#add-bar-btn', function() {
-				var data = $('#smwModal #bar-form').serialize();
+				//var data = $('#smwModal #bar-form').serialize();
+				var data = {
+                        bar_name: $('#smwModal').find('#bar_name').val(),
+                        description: $('#smwModal').find('#description').val()
+                    };
 				$.ajax({
 					type: "POST",
 					url: '{{ URL::to('/bars') }}' + (typeof id !== 'undefined'?('/' + id):''),
 					data: data,
 					success: function(data, textStatus, jqXHR) {
-						$('#smwModal').modal('hide');
-						dt.fnDraw();
+						if(typeof(data.success) != "undefined"){
+							var message = "";
+                          	if(typeof(data.errors.bar_name) != "undefined")
+                          		message += '* ' + data.errors.bar_name +'\n\n';
+                          	alert(message);
+                        	}
+                        	else{
+                        		$('#smwModal').modal('hide');
+	                        	dt.fnDraw();
+                        	}
 					},
+					error: function(jqXHR, textStatus, errorThrown){
+                        	alert("¡ESTO ES VERGONZOSO EN VERDAD! !TRANSACCIÓN ERRÓNEA!");
+                  	},
 					dataType: 'json'
 				});
 			});

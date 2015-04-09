@@ -10,7 +10,7 @@
         }
 
         public function usersDatatables() {
-            $users = User::join(DB::raw("(SELECT id user_type_id, type FROM users_types) users_types"), "users.user_type", "=", "users_types.user_type_id") -> select(array('id', 'username', 'email', 'type', 'created_at', 'updated_at'));
+            $users = User::join(DB::raw("(SELECT id user_type_id, type FROM users_types) users_types"), "users.user_type", "=", "users_types.user_type_id") -> select(array('id', 'username', 'type', 'epc', 'created_at', 'updated_at'));
             return  Datatables::of($users) -> make();
         }
 
@@ -28,7 +28,7 @@
                 }
             }
             $user-> username = $input['username'];
-            $user -> email = $input['email'];
+            $user -> epc = $input['epc'];
             $user -> user_type = $input['user_type'];
             $user -> save();
 
@@ -37,7 +37,7 @@
 
         public function getUser($id) {
 
-            $u = User::join('users_types', 'users.user_type', '=', 'users_types.id') -> select(array('users.id', 'users.username', 'users_types.type', 'users.user_type', 'users.email')) -> where('users.id', '=', $id) -> first();
+            $u = User::join('users_types', 'users.user_type', '=', 'users_types.id') -> select(array('users.id', 'users.username', 'users_types.type', 'users.user_type', 'users.epc')) -> where('users.id', '=', $id) -> first();
             if ($u !== null) {
                 return Response::json($u);
             }

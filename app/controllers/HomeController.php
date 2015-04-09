@@ -86,7 +86,8 @@ class HomeController extends BaseController {
     public function ioReportCSV($event_id = 0) {
         $input = Input::all();
         $columns=array('io', 'product_name', 'products.upc', 'event_log.tag', 'event_log.created_at');
-            $headers=array('Evento', 'Producto', 'UPC', 'Etiqueta', 'Fecha y Hora');
+        $headers=array('Evento', 'Producto', 'UPC', 'Etiqueta', 'Fecha y Hora');
+        
         if ($event_id == 0) {
 			$ev = JourneyEvent::active();
 			if ($ev -> count()) {
@@ -105,8 +106,8 @@ class HomeController extends BaseController {
                     'products.product_name',
                     'products.upc',
                     'event_log.tag',
-                    'event_log.created_at',
-                    DB::raw("traffic_rules.action AS io")
+                    'event_log.created_at'/*,
+                    DB::raw("traffic_rules.action AS io")*/
                     )
             ->where(function($query) use ($input,$columns) {
                     foreach ($columns as $column) {

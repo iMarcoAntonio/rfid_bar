@@ -13,7 +13,7 @@
 
 @section('content')
     <div class="tab-header">Dashboard</div>
-	<div class="table-responsive container">
+	<div class="table-responsive container" style="width: 100%; padding: 10px;">
 		<form id="event-select-form" name="event-select-form" method="get" action="{{ URL::to('/dashboard/') }}">
 			Seleccione el Evento:
 			<select name="event_id" id="event_id">
@@ -21,14 +21,14 @@
 				<option value="{{ $e -> id }}" {{ $e -> id == $event_id?'selected="selected"':'' }}>{{{ $e -> event_name }}}</option>
 				@endforeach
 			</select>
-			<input type="submit" value="Mostrar Evento Seleccionado" class="btn" />
+			<input type="submit" value="Mostrar" class="btn" />
 		</form>
 	</div>
     <div class="content-container">
         <div id="my-timeline"></div>
         <div class="divider row"><hr/></div>
         @if (count($reads) > 0)
-            <div class="table-responsive container">
+            <div class="table-responsive container" style="width: 100%; padding: 10px;">
                 <table class="table" id="reads">
                     <caption>Detalle de entradas y salidas de botellas</caption>
                     <thead>

@@ -10,7 +10,7 @@
 
         public function productsDatatables() {
             
-            $products = Product::join(DB::raw("(select id family_id,family_name from family) family"),"products.family_id","=","family.family_id")->select(array('id', 'upc', 'product_name','family_name', 'presentation', 'public_price','real_price', 'cup_milliliters', 'price_cup', 'empty_bottle_weight', 'created_at', 'updated_at'));
+            $products = Product::join(DB::raw("(select id family_id,family_name from family) family"),"products.family_id","=","family.family_id")->select(array('id', 'upc', 'product_name','family_name', 'presentation', 'public_price','real_price', 'cup_milliliters', 'price_cup', 'empty_bottle_weight'));
             return  Datatables::of($products) -> make();
         }
         
@@ -36,6 +36,49 @@
 
         public function store($id = 0) {
             $input = Input::All();
+
+            $rules = array(
+                'product_name' => array('required', 'regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/'), //, 'unique:products'
+                'upc' => 'required|digits:12',//|unique:products
+                'product_presentation' => 'required|digits_between:3,5',
+                'product_public_price' => array('required', 'numeric'),
+                'product_real_price' => array('required', 'numeric'),
+                'product_cup_milliliters' => 'required|integer',
+                'product_price_cup' => 'required|numeric',
+                'product_empty_weight' => 'required|integer'
+            );
+
+            $messages = array(
+                'product_name.required'     => '¡NECESITAMOS SABER EL NOMBRE DEL PRODUCTO!',
+                'product_name.regex'    => '¡EL NOMBRE DEL PRODUCTO DEBE CONTENER SÓLO LETRAS Y NÚMEROS',
+                //'product_name.unique'  => '¡EL NOMBRE DEL PRODUCTO YA EXISTE EN LA BASE DE DATOS!',
+                'upc.required'      => '¡NECESITAMOS SABER EL UPC DEL PRODUCTO!',
+                'upc.digits'        => '¡EL UPC DEL PRODUCTO DEBE SER UN NÚMERO DE 12 DÍGITOS!',
+                //'upc.unique'    => '¡EL UPC DEL PRODUCTO YA EXISTE EN LA BASE DE DATOS!',
+                'product_presentation.required' => '¡NECESITAMOS SABER LA PRESENTACIÓN DEL PRODUCTO EN MILILITROS!',
+                'product_presentation.digits_between'   => '¡LA PRESENTACIÓN DEL PRODUCTO DEBE ESPECIFICARSE CON UN NÚMERO ENTRE 3 y 5 DÍGITOS!',
+                'product_public_price.required'      => '¡NECESITAMOS SABER EL PRECIO DEL PRODUCTO AL PÚBLICO!',
+                'product_public_price.numeric'      => '¡EL PRECIO AL PÚBLICO DEL PRODUCTO DEBE SER UN VALOR NUMÉRICO!',
+                'product_real_price.required'      => '¡NECESITAMOS SABER EL PRECIO REAL DEL PRODUCTO!',
+                'product_real_price.regex'      => '¡EL PRECIO REAL DEL PRODUCTO DEBE SER UN VALOR NUMÉRICO!',
+                'product_cup_milliliters.required'   => '¡NECESITAMOS SABER LOS MILILITROS QUE CONTIENE UNA COPA!',
+                'product_cup_milliliters.integer'   => '¡EL CAMPO MILILITROS POR COPA DEBE SER UN VALOR ENTERO!',
+                'product_price_cup.required'    => '¡NECESITAMOS SABER EL PRECIO DE CADA COPA!',
+                'product_price_cup.numeric' => '¡EL CAMPO PRECIO PARA COPEO DEBE SER UN VALOR NUMÉRICO!',
+                'product_empty_weight.required' => '¡NECESITAMOS SABER EL PESO DE LA BOTELLA VACÍA EN GRAMOS!',
+                'product_empty_weight.integer' => '¡EL PESO DE LA BOTELLA VACÍA DEBE SER UN VALOR ENTERO!'
+            );
+
+            $validation = Validator::make($input, $rules, $messages);
+
+            if($validation->fails())
+            {
+                return Response::json(array(
+                    'success' => false,
+                    'errors'  => $validation->messages()->toArray()
+                ));
+            }
+
 			if ($id == 0) {
 				$product = new Product();
 			}
@@ -46,7 +89,7 @@
 				}
 			}
 			$product -> product_name = $input['product_name'];
-			$product -> upc = $input['product_upc'];
+			$product -> upc = $input['upc'];
 			$product -> description = $input['product_description'];
             $product -> family_id = $input['product_family'];
             $product -> presentation = $input['product_presentation'];

@@ -7,8 +7,7 @@
 @section('content')
 <div class="tab-header">Reporte de Entradas y Salidas de Botellas</div>
 <div class="content-container">
-    <div id="my-timeline"></div>
-	<div class="table-responsive container">
+	<div class="table-responsive container" style="width: 100%; padding: 10px;">
             <button class="btn btn-sm" style="float: right;" id="get_csv">CSV</button>
 		<form id="event-select-form" name="event-select-form" method="get" action="{{ URL::to('/reports/') }}">
 			Seleccione el Evento:
@@ -17,12 +16,12 @@
 				<option value="{{ $e -> id }}" {{ $e -> id == $event_id?'selected="selected"':'' }}>{{{ $e -> event_name }}}</option>
 				@endforeach
 			</select>
-			<input type="submit" value="Mostrar Evento Seleccionado" class="btn" />
+			<input type="submit" value="Mostrar" class="btn" />
 		</form>
 	</div>
     <div class="divider row"><hr/></div>
     @if (count($reads) > 0)
-    <div class="table-responsive container">
+    <div class="table-responsive container" style="width: 100%; padding: 10px;">
         <table class="table" id="reads">
             <caption>Detalle de entradas y salidas de botellas</caption>
             <thead>
@@ -91,7 +90,7 @@
 	$("#get_csv").click(function(){
                         //console.log(dt.oApi._fnAjaxParameters( dt.fnSettings()) );
                             var oParams = dt.oApi._fnAjaxParameters( dt.fnSettings() );
-                            window.location="/csv/reports/"+$('#event-select-form').val()+"?"+$.param(oParams);
+                            window.location="/csv/reports/"+$('#event_id').val()+"?"+$.param(oParams);
                         });
     });
 </script>

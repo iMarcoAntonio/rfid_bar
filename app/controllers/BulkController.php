@@ -28,9 +28,9 @@
 			if($validacion->fails()){
 				return "NO SE PUEDEN GUARDAR LOS DATOS";
 			}
-            $bulk_inventory = Bulk::where('epc', $input['epc'])->first();
-            $product = Product::where('upc', $input['upc'])->first();
-            $weight_bottle = WeightBottle::where('epc', $input['epc'])->first();
+            $bulk_inventory = Bulk::whereEpc($input['epc'])->first();
+            $product = Product::whereUpc($input['upc'])->first();
+            $weight_bottle = WeightBottle::whereEpc($input['epc'])->first();
             $ev = JourneyEvent::active();
 
             if(!isset($ev)) return "ERROR AL VINCULAR INVENTARIO CON EVENTO. INTENTE OTRA VEZ!";
@@ -43,21 +43,28 @@
                         if($dateNow > $ev->finished_at) return "NO PUEDES HACER INVENTARIO DE COPEO PARA EL EVENTO ACTIVO PORQUE ESTÁ FUERA DE TIEMPO.";
                         else{
                             if($input['inventory'] == 0){
+                                $bulk = new Bulk;
+                                $bulk->epc  =   $input['epc'];
+                                $bulk->upc  =   $input['upc'];
+                                $bulk->kg   =   $input['kg'];
+                                $bulk->event_id = $ev->id;
+                                $bulk->product_id = $product->id;
+                                $gLiq = $weight_bottle->filled_bottle_weight - $product->empty_bottle_weight;
+                                $wxcup = ($product->cup_milliliters*$gLiq)/$weight_bottle->milliliters;
+                                $gLiqRest = $gLiq-($weight_bottle->filled_bottle_weight-$input['kg']);
+                                $bulk->initial_cups = (int)($gLiqRest/$wxcup);
                                 if(!isset($bulk_inventory)){
-                                    $bulk = new Bulk;
-                                    $bulk->epc  =   $input['epc'];
-                                    $bulk->upc  =   $input['upc'];
-                                    $bulk->kg   =   $input['kg'];
-                                    $bulk->event_id = $ev->id;
-                                    $bulk->product_id = $product->id;
-                                    $gLiq = $weight_bottle->filled_bottle_weight - $product->empty_bottle_weight;
-                                    $wxcup = ($product->cup_milliliters*$gLiq)/$weight_bottle->milliliters;
-                                    $gLiqRest = $gLiq-($weight_bottle->filled_bottle_weight-$input['kg']);
-                                    $bulk->initial_cups = (int)($gLiqRest/$wxcup);
+                                    $bulk->cups_sold = 0;
+                                    $bulk->money_obtained = 0;
                                     $bulk->save();
                                     return '¡LOS DATOS SE GUARDARON CORRECTAMENTE!              PRODUCTO: '.$product->product_name.'           NÚMERO DE COPAS: '.(int)$bulk->initial_cups;
                                 }
-                                else return "¡YA EXISTE INVENTARIO INICIAL PARA ESTA BOTELLA!";
+                                else{
+                                    $bulk_inventory->cups_sold = $bulk_inventory->initial_cups - $bulk->initial_cups;
+                                    $bulk_inventory->money_obtained = $product->price_cup * $bulk_inventory->cups_sold;
+                                    $bulk_inventory->save();
+                                    return '¡CORRECTO!                         PRODUCTO: '.$product->product_name.'           NÚMERO DE COPAS: '.(int)$bulk->initial_cups; 
+                                } 
                             }
                             else{
                                 if(isset($bulk_inventory)){
@@ -75,7 +82,7 @@
                                     else return "YA EXISTE INVENTARIO FINAL DE ESTE PRODUCTO.";
                                 }
                                 else return "NO SE HA HECHO INVENTARIO INICIAL PARA ESTE PRODUCTO.";
-                            }
+                            }                            
                         }
                     }
                 }
@@ -115,5 +122,11 @@
             }
             else
                 return "NULL";
+        }
+
+        public function getupc()
+        {
+             $epc = new Epc('303424defc2e390000000004');
+            return $epc->getUpc();
         }
     }

@@ -25,7 +25,27 @@ class FamilyController extends \BaseController {
 
         public function store($id = 0) {
             $input = Input::All();
-            
+
+            $rules = array(
+				'family_name' => array('required', 'regex:/^([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/', 'unique:family')
+			);
+
+			$messages = array(
+				'family_name.required' 		=> '¡NECESITAMOS SABER EL NOMBRE DE LA FAMILIA!',
+				'family_name.regex'		=> '¡EL NOMBRE DE LA FAMILIA DEBE CONTENER ÚNICAMENTE CARACTERES ALFANUMÉRICOS!',
+				'family_name.unique'		=> '¡EL NOMBRE DE LA FAILIA YA EXISTE EN LA BASE DE DATOS!'
+			);
+
+			$validation = Validator::make($input, $rules, $messages);
+
+			if($validation->fails())
+			{
+				return Response::json(array(
+					'success' => false,
+					'errors'  => $validation->messages()->toArray()
+				));
+			}
+			
 			if ($id == 0) {
 				$family = new Family();
 			}
@@ -35,11 +55,15 @@ class FamilyController extends \BaseController {
 					return App::abort(403, 'Item not found');
 				}
 			}
-			$family -> family_name = $input["family"]['family_name'];
-			$family -> description = $input["family"]['description'];
+			$family -> family_name = $input['family_name'];
+			$family -> description = $input['description'];	
 			$family -> save();
 
 			return Response::json($family);
+        }
+
+        public function procesarQ(){
+        	return "HOLA";
         }
 		
 		public function getFamily($id) {
@@ -57,5 +81,4 @@ class FamilyController extends \BaseController {
 			}
 			return Response::json(array('ok' => 'ok'));
 		}
-
 }

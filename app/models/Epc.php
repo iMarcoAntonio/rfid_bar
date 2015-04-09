@@ -89,6 +89,34 @@
 				return $companyPrefix . $itemReferenceNumber . $checkDigit;
 			}
 		}
+
+		function getUpcc(){
+			$bin = $this -> _convBase('303424defc2e390000000004', '0123456789ABCDEF', '01');
+				if (strlen($bin) != 96) {
+					$l = 96 - strlen($bin);
+					$bin = str_pad($bin, 96, '0', STR_PAD_LEFT);
+					if ($debug) {
+						echo $bin . '<br/>';
+					}
+				}
+				$header = substr($bin, 0, 8);
+				$filter = substr($bin, 8, 3);
+				$partition = substr($bin, 11, 3);
+				$companyPrefix = bindec(substr($bin, 14, 24));
+				$itemReferenceNumber = bindec(substr($bin, 38, 20));
+				$serialNumber = substr($bin, 58, 38);
+				
+				if ($debug) {
+					echo 'Header (8 bits): ' . $header . '<br/>';
+					echo 'Filter: (3 bits): ' . $filter . '<br/>';
+					echo 'Partition: (3 bits): ' . $partition . '<br/>';
+					echo 'Company Prefix: (24 bits): ' . $companyPrefix . '<br/>';
+					echo 'Indicator Digit + Item Reference Number (20 bits): ' . $itemReferenceNumber . '<br/>';
+					echo 'Serial Number (38 bits): ' . $serialNumber . '<br/>';
+				}
+				$checkDigit = $this -> _checkDigit($companyPrefix . $itemReferenceNumber);
+				return $companyPrefix . $itemReferenceNumber . $checkDigit;
+		}
 	}
 	
 	

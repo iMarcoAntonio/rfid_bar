@@ -84,7 +84,12 @@
 						<td>{{{ $p['product_name'] }}}</td>
 						<?php $first = null; $diff = 0; ?>
 						@foreach ($inventories as $i)
-							<?php if (null === $first) { $first = isset($i -> productarray[$p['upc']]['total'])?$i -> productarray[$p['upc']]['total']:0; $diff = 0; } ?>
+							<?php 
+								if (null === $first) { 
+									$first = isset($i -> productarray[$p['upc']]['total'])?$i -> productarray[$p['upc']]['total']:0; 
+									$diff = 0; 
+								} 
+							?>
 							<?php 
 								if (isset($i -> productarray[$p['upc']]['total'])) { 
 									$diff = $first - $i -> productarray[$p['upc']]['total']; 

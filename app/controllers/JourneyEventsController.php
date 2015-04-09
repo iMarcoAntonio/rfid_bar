@@ -358,28 +358,47 @@ class JourneyEventsController extends \BaseController {
      * @return Response
      */
     public function postIndex($id = 0) {
-        if (Request::has('event')) {
-            $ev = Request::get('event');
-            if ($id == 0) {
-                $ev['started_at'] = Carbon\Carbon::now();
-                $event = new JourneyEvent($ev);
-                $event->finished_at = Carbon\carbon::now()->addDay();
-            }
-            if ((int) @$ev['active'] == 1) {
-                // deactivate others
-                JourneyEvent::where('active', 1)->update(array('active' => 0));
-            }
-            if ($id != 0) {
-                $event = JourneyEvent::find($id);
-                if (null === $event) {
-                    return App::abort(403, 'Item not found');
-                }
-                $event->fill($ev);
-            }
-            $event->save();
-            return Response::json($event);
+      $input = Input::All();
+
+      $rules = array(
+        'event_name' => array('required', 'regex:/^([0-9\/a-zA-ZñÑáéíóúÁÉÍÓÚ_-])+((\s*)+([0-9\/a-zA-ZñÑáéíóúÁÉÍÓÚ_-]*)*)+$/')//'unique:journey_events'
+      );
+
+      $messages = array(
+        'event_name.required'    => '¡NECESITAMOS SABER EL NOMBRE DEL EVENTO!',
+        'event_name.regex'   => '¡EL NOMBRE DEL EVENTO DEBE CONTENER ÚNICAMENTE LETRAS Y NÚMEROS!'//,
+        //'event_name.unique'    => '¡EL NOMBRE DEL EVENTO YA EXISTE EN LA BASE DE DATOS!'
+      );
+
+      $validation = Validator::make($input, $rules, $messages);
+
+      if($validation->fails())
+      {
+        return Response::json(array(
+          'success' => false,
+          'errors'  => $validation->messages()->toArray()
+        ));
+      }
+
+      if ($id == 0) {
+          $event = new JourneyEvent();
+          $event->started_at = Carbon\Carbon::now();
+          $event->finished_at = Carbon\carbon::now()->addDay();
+          if ($input['active'] == 1) {
+            JourneyEvent::where('active', 1)->update(array('active' => 0));
+          }
+      }
+      else{
+        $event = JourneyEvent::find($id);
+        if (null === $event) {
+            return App::abort(403, 'Item not found');
         }
-        return App::abort(403, 'Invalid Request');
+      }
+      $event->event_name = $input['event_name'];
+      $event->description = $input['description'];
+      $event->active = $input['active'];
+      $event->save();
+      return Response::json($event);
     }
 
     /**
@@ -526,15 +545,16 @@ class JourneyEventsController extends \BaseController {
                 $event_id = $ev->id;
             }
         }
-
         $inventories = null;
         $invfull = null;
         $products = null;
         $iids = array();
         if ($event_id != 0) {
             $eventinv = JourneyEvent::with(array('inventories'))->find($event_id);
+           // return Response::json($eventinv);
             if (Input::has('inventory_id')) {
                 $iids = Input::get('inventory_id', array());
+                //return $iids;
                 if (!is_array($iids)) {
                     $iids = array($iids);
                 }
@@ -542,6 +562,7 @@ class JourneyEventsController extends \BaseController {
                     $event = JourneyEvent::with(array('inventories' => function($query) use ($iids) {
                                     return $query->whereIn('id', $iids);
                                 }, 'inventories.summaries.product'))->find($event_id);
+                    //return Response::json($event);
                     $inventories = $event->inventories;
                     foreach ($inventories as &$i) {
                         $prodarr = array();
@@ -588,10 +609,11 @@ class JourneyEventsController extends \BaseController {
                 }
                 if (isset($i->productarray[$p['upc']]['total'])) {
                     $diff = $first - $i->productarray[$p['upc']]['total'];
+                    $tempa[] = $i->productarray[$p['upc']]['total'];
                 } else {
                     $diff = $first;
+                    $tempa[] = '-';
                 }
-                $tempa[] = $i->productarray[$p['upc']]['total'] or '-';
             }
             $tempa[] = $diff;
             $grid[] = $tempa;

@@ -6,27 +6,18 @@
 @stop
 
 @section('content')
-<div class="tab-header">Eventos</div>
-<div class="content-container">
-    <div class="table-responsive container" style="width: 100%; padding: 10px;">
-        <form name="event-select" id="event-select" method="get" action="{{ URL::to('/bulk/') }}">
-            Seleccione el Evento:
-            <select name="event_id" id="event_id">
-                @foreach($events as $e)
-                <option value="{{ $e -> id }}" {{ $e -> id == $event_id?'selected="selected"':'' }}>{{{ $e -> event_name }}}</option>
-                @endforeach
-            <input type="submit" value="Mostrar Evento Seleccionado" class="btn" />
-        </form>
-    </div>
-</div>
-
 <div class="tab-header">Inventario de copeo para el evento: "{{$event->event_name}}"</div>
 <div class="content-container">
     <div class="table-responsive container" style="width: 100%; padding: 10px;">
-    <!--
-        <button class="btn btn-sm" data-toggle="modal" data-target="#smwModal" id="add_product">Agregar Producto</button>
-    -->
-        <button class="btn btn-sm" style="float: right;" id="get_csv">CSV</button>
+        <form name="event-select" id="event-select" method="get" action="{{ URL::to('/bulk/') }}">
+                Seleccione el Evento:
+                <select name="event_id" id="event_id">
+                    @foreach($events as $e)
+                    <option value="{{ $e -> id }}" {{ $e -> id == $event_id?'selected="selected"':'' }}>{{{ $e -> event_name }}}</option>
+                    @endforeach
+                <input type="submit" value="Mostrar" class="btn" />
+        </form>
+       <!-- <button class="btn btn-sm" style="float: right;" id="get_csv">CSV</button>-->
 
         <table class="table" id="reads">
             <caption style="font-size: 18px; font-weight: bold;">Listado de lecturas de copeo</caption>

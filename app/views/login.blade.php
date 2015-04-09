@@ -53,7 +53,7 @@
 </head>
 
 <body>
-    <div class="logo"><img src="/img/logo_feng.png"></div>
+    <div class="logo"><img src="/img/logo_hqh_login.jpg"></div>
     <div class="container">
         <form class="form-signin" role="form" method="post" action="/login">
             <h2 class="form-signin-heading">Inicio de Sesión</h2>

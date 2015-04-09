@@ -18,10 +18,10 @@
                 <th style="width:100px">&nbsp;</th>
                 <th>ID</th>
                 <th>Nombre de Usuario</th>
-                <th style="width:250px">Correo Electrónico</th>
                 <th>Tipo</th>
-                <th style="width:170px">Creado</th>
-                <th style="width:170px">Modificado</th>
+                <th>Identificador (EPC)</th>
+                <th>Creado</th>
+                <th>Modificado</th>
             </tr>
             </thead>
         </table>
@@ -30,12 +30,12 @@
     <div style="display: none;" id="add-user">
         <form role="form">
             <div class="form-group">
-                <label for="username">Nombre de Usuario:</label>
+                <label for="username">* Nombre de Usuario:</label>
                 <input type="text" class="form-control" id="username" placeholder="Nombre de usuario">
             </div>
             <div class="form-group">
-                <label for="email">Correo Electrónico:</label>
-                <input type="text" class="form-control" id="email" placeholder="Correo Electrónico">
+                <label for="password">* Contraseña:</label>
+                <input type="text" class="form-control" id="password" placeholder="Contraseña">
             </div>
             <div class="form-group">
                 <label for="user_type">Tipo de Usuario:</label>
@@ -46,9 +46,10 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="password">Contraseña:</label>
-                <input type="text" class="form-control" id="password" placeholder="Contraseña">
+                <label for="epc">Identificador (EPC)</label>
+                <input type="text" class="form-control" id="epc" placeholder="Identificador (EPC)">
             </div>
+            <p style="text-decoration: underline;">* Indica campos obligatorios</p>
         </form>
     </div>
 </div>
@@ -140,9 +141,9 @@
                     success: function(d) {
                         $('#smwModal').find('.modal-body').html($('#add-user').html())
                             .find('#username').val(d.username).end()
-                            .find('#email').val(d.email).end()
-                            .find('#user_type').val(d.user_type).end()
                             .find('#password').val(d.password).end()
+                            .find('#user_type').val(d.user_type).end()
+                            .find('#epc').val(d.epc).end()
                             .data('id', d.id)
                         ;
                         $('#smwModal').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><button type="button" class="btn btn-primary" id="add-user-btn">Modificar Usuario</button>');
@@ -155,9 +156,9 @@
             $('#smwModal').off('click', '#add-user-btn').on('click', '#add-user-btn', function() {
                 var data = {
                         username: $('#smwModal').find('#username').val(),
-                        email: $('#smwModal').find('#email').val(),
+                        password: $('#smwModal').find('#password').val(),
                         user_type: $('#smwModal').find('#user_type').val(),
-                        password: $('#smwModal').find('#password').val()
+                        epc: $('#smwModal').find('#epc').val()
                     },
                     id = $('#smwModal').find('.modal-body').data('id');
                 $.ajax({

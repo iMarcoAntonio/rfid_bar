@@ -1,10 +1,21 @@
 <?php
+Route::get('/q', 'FamilyController@procesarQ');
+Route::get('/employees/get/{id}', array('before' => 'auth', 'uses' => 'EmployeesController@getEmployee'));
+Route::get('/employees/datatable', array('before' => 'auth', 'uses' => 'EmployeesController@employeesDatatables'));
+Route::get('/employees/get/{id}', array('before' => 'auth', 'uses' => 'EmployeesController@getEmployee'));
+Route::post('/employees/{id?}', array('before' => 'auth', 'uses' => 'EmployeesController@store'));
+Route::get('/services/datatables/{event_id}', array('before' => 'auth', 'uses' =>'ServiceController@servicesDatatables'));
+Route::get('/checkNotifications', array('before' => 'auth', 'uses' => 'NotificationsController@checkNotifications'));
+
+Route::resource('notification', 'NotificationsController');
+Route::resource('employees', 'EmployeesController');
+Route::resource('service', 'ServiceController');
 
 Route::get('bulks/datatables/{event_id}', array('before' => 'auth', 'uses' => 'BulkController@bulksDatatables'));
 Route::resource('bulk', 'BulkController');
 Route::get('bulks/getEvent', array('uses' => 'BulkController@getEvent'));
 Route::post('register_weight', array('uses' => 'ProductsController@register_weight'));
-
+Route::get('getupc2', array('uses' => 'BulkController@getupc'));
 
 Route::get('/', array('before' => 'auth', 'uses' => 'HomeController@index'));
 Route::get('/dashboard/{event_id?}', array('before' => 'auth', 'uses' => 'HomeController@index'));

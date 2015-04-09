@@ -26,8 +26,6 @@
                     <th>Mililitros por copa</th>
                     <th>Precio para copeo</th>
                     <th>Peso vacía</th>
-                    <th style="width:170px">creado</th>
-                    <th style="width:170px">modificado</th>
                 </tr>
             </thead>
         </table>
@@ -92,11 +90,11 @@
                 <input type="radio" class="form-inline" name="product_type" id="product_type_2" value="2">Barra
 				</label>
             </div>
+            <p style="text-decoration: underline;">* Indica campos obligatorios</p>
         </form>
     </div>
-	
-	
 </div>
+
 <div class="modal hide" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
 	<div class="modal-header">
 		<h1>Processing...</h1>
@@ -141,7 +139,7 @@
                     }
                 },
 				"aoColumns": [
-					{ 
+					{   
 						"bSortable": false,
 						"bSearchable": false,
 						"mData": 0,
@@ -179,9 +177,7 @@
                                             },
                                         { "mData": 7 },
                                         { "mData": 8 },
-                                        { "mData": 9 },
-                                        { "mData": 10 },
-                                        { "mData": 11 }
+                                        { "mData": 9 }
 				]
             });
 
@@ -225,7 +221,7 @@
                         product_name: $('#smwModal').find('#product_name').val(),
                         product_public_price: $('#smwModal').find('#product_public_price').val(),
                         product_real_price: $('#smwModal').find('#product_real_price').val(),
-                        product_upc: $('#smwModal').find('#product_upc').val(),
+                        upc: $('#smwModal').find('#product_upc').val(),
                         product_family:$('#smwModal').find('#product_family').val(),
                         product_presentation:$('#smwModal').find('#product_presentation').val(),
                         product_description: $('#smwModal').find('#product_description').val(),
@@ -241,8 +237,33 @@
                         url: '{{ URL::to('/products') }}' + (typeof id !== 'undefined'?('/' + id):''),
                         data: data,
                         success: function(data, textStatus, jqXHR) {
-                            $('#smwModal').modal('hide');
-                            dt.fnDraw();
+                            if(typeof(data.success) != "undefined"){
+                                var message = "";
+                                if(typeof(data.errors.product_name) != "undefined")
+                                    message += '* ' + data.errors.product_name +'\n\n';
+                                if(typeof(data.errors.upc) != "undefined")
+                                    message += '* ' + data.errors.upc +'\n\n';
+                                if(typeof(data.errors.product_presentation) != "undefined")
+                                    message += '* ' + data.errors.product_presentation +'\n\n';
+                                if(typeof(data.errors.product_public_price) != "undefined")
+                                    message += '* ' + data.errors.product_public_price +'\n\n';
+                                if(typeof(data.errors.product_real_price) != "undefined")
+                                    message += '* ' + data.errors.product_real_price +'\n\n';
+                                if(typeof(data.errors.product_cup_milliliters) != "undefined")
+                                    message += '* ' + data.errors.product_cup_milliliters +'\n\n';
+                                if(typeof(data.errors.product_price_cup) != "undefined")
+                                    message += '* ' + data.errors.product_price_cup +'\n\n';
+                                if(typeof(data.errors.product_empty_weight) != "undefined")
+                                    message += '* ' + data.errors.product_empty_weight;
+                                alert(message);
+                            }
+                            else{
+                                $('#smwModal').modal('hide');
+                                dt.fnDraw();
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown){
+                            alert("¡ESTO ES VERGONZOSO EN VERDAD! \n\n !TRANSACCIÓN ERRÓNEA!");
                         },
                         dataType: 'json'
                     });
@@ -266,7 +287,7 @@
                         if (!confirm('Desea borrar el Producto?')) {
                                 return false;
                         }
-
+                        
                         $.ajax({
                                 type: "POST",
                                 url: '{{ URL::to('/products/delete') }}' + '/' + id,
