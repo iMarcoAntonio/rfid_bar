@@ -7,7 +7,7 @@
         }
 
         public function barsDatatables() {
-            $bars = Bar::select(array('id', 'bar_name', 'created_at', 'updated_at'));
+            $bars = Bar::select(array('id', 'bar_name'));
             return  Datatables::of($bars) -> make();
         }
 		

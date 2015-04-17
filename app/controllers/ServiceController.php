@@ -32,7 +32,7 @@
         }
 
         public function servicesDatatables($event_id) {
-            $services = DB::table('services')->select(array('services.employee_waiter_id', 'services.employee_barman_id', 'services.inventory_service_id'));
+            $services = DB::table('services')->select(array('services.user_waiter_id', 'services.user_barman_id', 'services.inventory_service_id'));
 
              return Datatables::of($services)->make();
         }

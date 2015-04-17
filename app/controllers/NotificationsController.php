@@ -10,9 +10,9 @@
                 $notification = Notification::whereBand(1)->first();
                 if (!is_null($notification)) {
                     $service = new Service();
-                    $waiter = User::whereEpc($notification->employee_waiter_epc)->first();
+                    $waiter = User::whereEpc($notification->user_waiter_epc)->first();
                     $product = Product::whereId($notification->inventory_service_upc)->first();
-                    $barman = User::whereEpc($notification->employee_waiter_epc)->first();
+                    $barman = User::whereEpc($notification->user_waiter_epc)->first();
                     $waiter_name = ' ';
                     $service_name = ' ';
                     $barman_name = ' ';
@@ -51,8 +51,8 @@
             if($notificationsCount < 1)
             {
                foreach ($input['epcs'] as $epc) {
-                    $employee = Employee::whereEpc($epc)->first();
-                    if(is_null($employee)){
+                    $user = User::whereEpc($epc)->first();
+                    if(is_null($user)){
                         $prodUpc = InventoryEpc::whereEpc($epc)->first();
                         if(!is_null($prodUpc)){
                             $producto = Product::whereUpc($prodUpc->upc)->first();
@@ -61,12 +61,12 @@
                     }
                     else
                     {
-                        if($employee->employee_position_id == 1){
-                            $notification->employee_waiter_epc = $epc;
+                        if($user->user_type == 3){
+                            $notification->user_waiter_epc = $epc;
                         }
                         else
                         {
-                            $notification->employee_barman_epc = $epc;
+                            $notification->user_barman_epc = $epc;
                         }
                     }
                 }

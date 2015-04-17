@@ -118,8 +118,26 @@
 					{ "mData": 0 },
 					{ "mData": 1 },
 					{ "mData": 2 },
-					{ "mData": 3 },
-					{ "mData": 4 },
+					{ "mData": 3,
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            var d = new Date(sData);
+                            var sum = parseInt(d.getMonth()) + 1;
+                            if(sum < 10)
+                                sum = "0" + sum;
+                            var date = d.getDate() + "/" + sum + "/" + d.getFullYear();
+                            $(nTd).text(date);
+                        } 
+                    },
+					{ "mData": 4,
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            var d = new Date(sData);
+                            var sum = parseInt(d.getMonth()) + 1;
+                            if(sum < 10)
+                                sum = "0" + sum;
+                            var date = d.getDate() + "/" + sum + "/" + d.getFullYear();
+                            $(nTd).text(date);
+                        } 
+                    },
 					{ "mData": 5 },
 					{ "mData": 6 },
                                         { 
@@ -139,9 +157,28 @@
                                                         }
 						}
 					},
-                                        { "mData": 7 },
-                                        { "mData": 8 },
-					{ "mData": 9 }
+                    { "mData": 7 },
+                    { "mData": 8,
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            var d = new Date(sData);
+                            var sum = parseInt(d.getMonth()) + 1;
+                            if(sum < 10)
+                                sum = "0" + sum;
+                            var date = d.getDate() + "/" + sum + "/" + d.getFullYear();
+                            $(nTd).text(date);
+                        } 
+                    },
+
+					{ "mData": 9,
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                            var d = new Date(sData);
+                            var sum = parseInt(d.getMonth()) + parseInt(1);
+                            if(sum < 10)
+                                sum = "0" + sum;
+                            var date = d.getDate() + "/" + sum + "/" + d.getFullYear();
+                            $(nTd).text(date);
+                        }
+                    }
 				]
             });
 

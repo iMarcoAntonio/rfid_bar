@@ -15,13 +15,11 @@
             <caption style="font-size: 18px; font-weight: bold;">Familias</caption>
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
-                    <th>&nbsp;</th>
-                    <th>id</th>
+                    <th style="width:50px;">&nbsp;</th>
+                    <th style="width:50px;">&nbsp;</th>
+                    <th style="width:50px;">id</th>
                     <th style="width:240px;">Familia</th>
                     <th>Descripción</th>
-                    <th style="width:170px;">creado</th>
-                    <th style="width:170px;">modificado</th>
                 </tr>
             </thead>
         </table>
@@ -108,9 +106,7 @@
 					},
 					{ "mData": 0 },
 					{ "mData": 1 },
-					{ "mData": 2 },
-					{ "mData": 3 },
-					{ "mData": 4 }
+					{ "mData": 2 }
 				]
             });
 

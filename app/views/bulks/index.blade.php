@@ -17,7 +17,7 @@
                     @endforeach
                 <input type="submit" value="Mostrar" class="btn" />
         </form>
-       <!-- <button class="btn btn-sm" style="float: right;" id="get_csv">CSV</button>-->
+       <button class="btn btn-sm" style="float: right;" id="get_csv">CSV</button>
 
         <table class="table" id="reads">
             <caption style="font-size: 18px; font-weight: bold;">Listado de lecturas de copeo</caption>
@@ -101,12 +101,21 @@
                 window.location.href = '' + base + '/' + ev;
                 return false;
             });
-
-            $("#get_csv").click(function(){
-            //console.log(dt.oApi._fnAjaxParameters( dt.fnSettings()) );
-                var oParams = dt.oApi._fnAjaxParameters( dt.fnSettings() );
-                window.location="/products/csv"+"?"+$.param(oParams);
+/*
+            $("#get_csv").click(function(e){
+                e.preventDefault();
+                var o = $(this),
+                base = o.attr('action'),
+                ev = o.find('#event_id').val();
+                window.location.href = '' + 'bulks/csv' + '/' + ev;
+                return false;
             });
+*/
+            $("#get_csv").click(function(){
+                        //console.log(dt.oApi._fnAjaxParameters( dt.fnSettings()) );
+                            var oParams = dt.oApi._fnAjaxParameters( dt.fnSettings() );
+                            window.location="/bulks/csv/"+ev+"?"+$.param(oParams);
+                        });
         });
     </script>
 @stop

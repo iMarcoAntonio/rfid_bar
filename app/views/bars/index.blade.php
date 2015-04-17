@@ -15,11 +15,9 @@
             <caption style="font-size: 18px; font-weight: bold;">Listado de Barras</caption>
             <thead>
             <tr>
-                <th>&nbsp;</th>
-                <th>id</th>
+                <th style="width:110px;">&nbsp;</th>
+                <th style="width:50px;">id</th>
                 <th>Barra</th>
-                <th>creado</th>
-                <th>modificado</th>
             </tr>
             </thead>
         </table>
@@ -91,9 +89,7 @@
 					}
 				},
 				{ "mData": 0 },
-				{ "mData": 1 },
-				{ "mData": 2 },
-				{ "mData": 3 }
+				{ "mData": 1 }
 			]
         });
 

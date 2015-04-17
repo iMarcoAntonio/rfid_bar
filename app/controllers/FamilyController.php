@@ -12,7 +12,7 @@ class FamilyController extends \BaseController {
      * @return Response
      */
     public function getDatatable() {
-        $es = Family::select('id', 'family_name', 'description', 'created_at', 'updated_at');
+        $es = Family::select('id', 'family_name', 'description');
         return Datatables::of($es)->make();
     }
     
@@ -62,10 +62,6 @@ class FamilyController extends \BaseController {
 			return Response::json($family);
         }
 
-        public function procesarQ(){
-        	return "HOLA";
-        }
-		
 		public function getFamily($id) {
 			$p = Family::find($id);
 			if ($p !== null) {

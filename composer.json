@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.1.*",
 		"doctrine/dbal": "~2.3",
-        "bllim/datatables": "*"
+        "bllim/datatables": "*",
+        "Maatwebsite/excel": "~2.0.0"
 	},
     "require-dev": {
         "way/generators": "2.*"
